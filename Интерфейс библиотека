@@ -245,6 +245,7 @@ function Kavo.CreateLib(kavName, themeList)
     local coverup = Instance.new("Frame")
     local title = Instance.new("TextLabel")
     local close = Instance.new("ImageButton")
+    local minimize = Instance.new("TextButton")
     local MainSide = Instance.new("Frame")
     local sideCorner = Instance.new("UICorner")
     local coverup_2 = Instance.new("Frame")
@@ -323,9 +324,46 @@ function Kavo.CreateLib(kavName, themeList)
     close.Image = "rbxassetid://3926305904"
     close.ImageRectOffset = Vector2.new(284, 4)
     close.ImageRectSize = Vector2.new(24, 24)
+    local isMinimized = false
+    local expandedSize = Main.Size
+
+    minimize.Name = "minimize"
+    minimize.Parent = MainHeader
+    minimize.BackgroundTransparency = 1.000
+    minimize.Position = UDim2.new(0.907999992, 0, 0.137999997, 0)
+    minimize.Size = UDim2.new(0, 21, 0, 21)
+    minimize.ZIndex = 2
+    minimize.Font = Enum.Font.GothamBold
+    minimize.Text = "-"
+    minimize.TextColor3 = themeList.TextColor
+    minimize.TextSize = 20
+
+    minimize.MouseButton1Click:Connect(function()
+        isMinimized = not isMinimized
+
+        if isMinimized then
+            MainSide.Visible = false
+            pages.Visible = false
+            minimize.Text = "+"
+            game.TweenService:Create(Main, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = UDim2.new(expandedSize.X.Scale, expandedSize.X.Offset, 0, 29)
+            }):Play()
+        else
+            MainSide.Visible = true
+            pages.Visible = true
+            minimize.Text = "-"
+            game.TweenService:Create(Main, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = expandedSize
+            }):Play()
+        end
+    end)
+
     close.MouseButton1Click:Connect(function()
         game.TweenService:Create(close, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
             ImageTransparency = 1
+        }):Play()
+        game.TweenService:Create(minimize, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+            TextTransparency = 1
         }):Play()
         wait()
         game.TweenService:Create(Main, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
